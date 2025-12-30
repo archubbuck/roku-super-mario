@@ -1,0 +1,34 @@
+# Roku build artifacts
+*.pkg
+*.zip
+out/
+.tmp/
+
+# BrightScript profiler output
+*.bsprof
+
+# VS Code workspace files
+.vscode/.ropeproject
+.vscode/settings.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment variables (store Roku IP and password)
+.env
+.env.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# IDE files
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+tmp/
+temp/

@@ -1,0 +1,28 @@
+name: Build Roku Package
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  package:
+    name: Package channel
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create package zip
+        run: |
+          mkdir -p build
+          zip -r build/roku-super-mario.zip manifest source images audio levels \
+            -x '*.git*' '*.DS_Store' '*__MACOSX*' '*__pycache__*'
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: roku-super-mario
+          path: build/roku-super-mario.zip
+          if-no-files-found: error

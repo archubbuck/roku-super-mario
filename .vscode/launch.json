@@ -1,0 +1,28 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "BrightScript Debug: Launch",
+            "type": "brightscript",
+            "request": "launch",
+            "host": "${env:ROKU_DEV_TARGET}",
+            "password": "${env:DEVPASSWORD}",
+            "rootDir": "${workspaceFolder}",
+            "files": [
+                "source/**/*.*",
+                "components/**/*.*",
+                "images/**/*.*",
+                "audio/**/*.*",
+                "levels/**/*.*",
+                "manifest"
+            ],
+            "enableDebugProtocol": true,
+            "stopDebuggerOnAppExit": false,
+            "retainDeploymentArchive": true,
+            "injectRdbOnDeviceComponent": false,
+            "enableVariablesPanel": true,
+            "stopOnEntry": false,
+            "preLaunchAction": "none"
+        }
+    ]
+}

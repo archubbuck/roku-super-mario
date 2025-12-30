@@ -43,7 +43,11 @@ Sub RenderSystem_Init()
     ' Load tileset
     m.tileset = CreateObject("roBitmap", "pkg:/images/tiles/tileset-fhd.png")
     print "Rendering system initialized"
-    print "Tileset loaded: " + str(m.tileset <> invalid)
+    if m.tileset <> invalid then
+        print "Tileset loaded: true"
+    else
+        print "Tileset loaded: false"
+    end if
 End Sub
 
 

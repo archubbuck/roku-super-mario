@@ -146,6 +146,14 @@ Sub Main()
         
         ' 2. HANDLE INPUT (Non-blocking)
         ProcessInput(gameState)
+        
+        ' Update notification timer (runs in all modes)
+        if gameState.notificationTimer > 0 then
+            gameState.notificationTimer = gameState.notificationTimer - gameState.deltaTime
+            if gameState.notificationTimer < 0 then
+                gameState.notificationTimer = 0
+            end if
+        end if
 
         ' Reset level when requested (e.g., new game from menu)
         if gameState.requestReset then
@@ -157,6 +165,7 @@ Sub Main()
         if gameState.mode = "menu" then
             renderer.Clear(screen)
             gameState.menu.Render(screen, renderer)
+            DrawNotification(screen, gameState)
             screen.SwapBuffers()
             continue while
         end if
@@ -185,6 +194,7 @@ Sub Main()
         if gameState.mode = "options" then
             renderer.Clear(screen)
             DrawOptionsOverlay(screen, gameState)
+            DrawNotification(screen, gameState)
             screen.SwapBuffers()
             continue while
         end if
@@ -620,14 +630,6 @@ Sub UpdateGame(gameState as Object)
             gameState.fpsDisplay = Int(1.0 / gameState.deltaTime)
         end if
         gameState.fpsUpdateTimer = 0.0
-    end if
-    
-    ' Update notification timer
-    if gameState.notificationTimer > 0 then
-        gameState.notificationTimer = gameState.notificationTimer - gameState.deltaTime
-        if gameState.notificationTimer < 0 then
-            gameState.notificationTimer = 0
-        end if
     end if
 End Sub
 

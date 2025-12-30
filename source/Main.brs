@@ -684,19 +684,22 @@ Sub DrawNotification(screen as Object, gameState as Object)
         if alpha > 255 then alpha = 255
     end if
     
-    ' Draw semi-transparent background
-    bgColor = &h2E74FF00 + alpha  ' Blue background with fade
+    ' Draw semi-transparent background (format: RRGGBBAA)
+    ' Blue color (RGB: 2E74FF) with dynamic alpha
+    bgColor = (&h2E74FF00 OR alpha)
     screen.DrawRect(boxX, boxY, boxWidth, boxHeight, bgColor)
     
-    ' Draw border
-    borderColor = &hFFFFFF00 + alpha  ' White border with fade
+    ' Draw border (format: RRGGBBAA)
+    ' White color (RGB: FFFFFF) with dynamic alpha
+    borderColor = (&hFFFFFF00 OR alpha)
     screen.DrawRect(boxX, boxY, boxWidth, 3, borderColor)  ' Top
     screen.DrawRect(boxX, boxY + boxHeight - 3, boxWidth, 3, borderColor)  ' Bottom
     screen.DrawRect(boxX, boxY, 3, boxHeight, borderColor)  ' Left
     screen.DrawRect(boxX + boxWidth - 3, boxY, 3, boxHeight, borderColor)  ' Right
     
-    ' Draw text
-    textColor = &hFFFFFF00 + alpha  ' White text with fade
+    ' Draw text (format: RRGGBBAA)
+    ' White text with dynamic alpha
+    textColor = (&hFFFFFF00 OR alpha)
     textX = boxX + padding
     textY = boxY + 15
     screen.DrawText(gameState.notificationText, textX, textY, textColor, font)

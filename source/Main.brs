@@ -109,6 +109,11 @@ Sub Main()
         levelIndex: levelIndex
         levelCompleteTimer: 0.0
         levelCompletePlayed: false
+        
+        ' Notification system
+        notificationText: ""
+        notificationTimer: 0.0
+        notificationDuration: 2.0  ' Show notification for 2 seconds
     }
     menu.UpdateLevelLabel(gameState)
     menu.UpdateLevelLabel(gameState)
@@ -547,6 +552,15 @@ Sub ProcessInput(gameState as Object)
     msg = gameState.port.GetMessage()
     
     if msg <> invalid AND type(msg) = "roUniversalControlEvent" then
+        ' Check for play/pause button press (before other handling)
+        keyCode = msg.GetInt()
+        isPressed = (msg.GetIndex() = 1)
+        if keyCode = gameState.inputState.KEY_PLAY AND isPressed then
+            ' Show notification in upper right corner
+            gameState.notificationText = "Play/Pause Pressed"
+            gameState.notificationTimer = gameState.notificationDuration
+        end if
+        
         ' Let input system handle the event
         gameState.inputState.HandleEvent(msg)
 
@@ -607,6 +621,14 @@ Sub UpdateGame(gameState as Object)
         end if
         gameState.fpsUpdateTimer = 0.0
     end if
+    
+    ' Update notification timer
+    if gameState.notificationTimer > 0 then
+        gameState.notificationTimer = gameState.notificationTimer - gameState.deltaTime
+        if gameState.notificationTimer < 0 then
+            gameState.notificationTimer = 0
+        end if
+    end if
 End Sub
 
 
@@ -628,6 +650,56 @@ Sub RenderGame(gameState as Object)
     
     ' Draw HUD (fixed position, not affected by camera)
     DrawHUD(screen, gameState)
+    
+    ' Draw notification if active
+    DrawNotification(screen, gameState)
+End Sub
+
+
+' *****************************************************
+' Draw Notification (Upper Right Corner)
+' *****************************************************
+Sub DrawNotification(screen as Object, gameState as Object)
+    if gameState.notificationTimer <= 0 OR gameState.notificationText = "" then return
+    
+    ' Create notification box
+    font = CreateObject("roFont", "font:MediumBoldSystemFont", 32, false)
+    textWidth = font.GetOneLineWidth(gameState.notificationText)
+    
+    ' Box dimensions with padding
+    padding = 20
+    boxWidth = textWidth + (padding * 2)
+    boxHeight = 60
+    
+    ' Position in upper right corner
+    screenWidth = gameState.renderer.SCREEN_WIDTH
+    boxX = screenWidth - boxWidth - 20  ' 20px from right edge
+    boxY = 20  ' 20px from top
+    
+    ' Calculate fade effect for last 0.5 seconds
+    alpha = 255
+    if gameState.notificationTimer < 0.5 then
+        alpha = Int(gameState.notificationTimer * 2.0 * 255)
+        if alpha < 0 then alpha = 0
+        if alpha > 255 then alpha = 255
+    end if
+    
+    ' Draw semi-transparent background
+    bgColor = &h2E74FF00 + alpha  ' Blue background with fade
+    screen.DrawRect(boxX, boxY, boxWidth, boxHeight, bgColor)
+    
+    ' Draw border
+    borderColor = &hFFFFFF00 + alpha  ' White border with fade
+    screen.DrawRect(boxX, boxY, boxWidth, 3, borderColor)  ' Top
+    screen.DrawRect(boxX, boxY + boxHeight - 3, boxWidth, 3, borderColor)  ' Bottom
+    screen.DrawRect(boxX, boxY, 3, boxHeight, borderColor)  ' Left
+    screen.DrawRect(boxX + boxWidth - 3, boxY, 3, boxHeight, borderColor)  ' Right
+    
+    ' Draw text
+    textColor = &hFFFFFF00 + alpha  ' White text with fade
+    textX = boxX + padding
+    textY = boxY + 15
+    screen.DrawText(gameState.notificationText, textX, textY, textColor, font)
 End Sub
 
 

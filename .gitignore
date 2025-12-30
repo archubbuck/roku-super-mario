@@ -3,6 +3,8 @@
 *.zip
 out/
 .tmp/
+build/
+test-build/
 
 # BrightScript profiler output
 *.bsprof

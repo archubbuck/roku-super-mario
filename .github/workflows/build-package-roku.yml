@@ -16,12 +16,12 @@ jobs:
 
       - name: Prepare package directory
         run: |
-          mkdir -p build/package
-          cp -r manifest source images audio levels build/package/
+          mkdir -p build/roku-super-mario
+          cp -r manifest source images audio levels build/roku-super-mario/
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: roku-super-mario
-          path: build/package/*
+          path: build/roku-super-mario/
           if-no-files-found: error

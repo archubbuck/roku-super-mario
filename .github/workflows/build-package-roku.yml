@@ -14,15 +14,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Create package zip
+      - name: Prepare package directory
         run: |
-          mkdir -p build
-          zip -r build/roku-super-mario.zip manifest source images audio levels \
-            -x '*.git*' '*.DS_Store' '*__MACOSX*' '*__pycache__*'
+          mkdir -p build/package
+          cp -r manifest source images audio levels build/package/
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: roku-super-mario
-          path: build/roku-super-mario.zip
+          path: build/package/*
           if-no-files-found: error

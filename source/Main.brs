@@ -114,6 +114,7 @@ Sub Main()
         notificationText: ""
         notificationTimer: 0.0
         notificationDuration: 2.0  ' Show notification for 2 seconds
+        notificationFont: invalid  ' Cache font to avoid creating every frame
     }
     menu.UpdateLevelLabel(gameState)
     menu.UpdateLevelLabel(gameState)
@@ -664,8 +665,11 @@ End Sub
 Sub DrawNotification(screen as Object, gameState as Object)
     if gameState.notificationTimer <= 0 OR gameState.notificationText = "" then return
     
-    ' Create notification box
-    font = CreateObject("roFont", "font:MediumBoldSystemFont", 32, false)
+    ' Create notification box font (cache it to avoid creating every frame)
+    if gameState.notificationFont = invalid then
+        gameState.notificationFont = CreateObject("roFont", "font:MediumBoldSystemFont", 32, false)
+    end if
+    font = gameState.notificationFont
     textWidth = font.GetOneLineWidth(gameState.notificationText)
     
     ' Box dimensions with padding
@@ -684,6 +688,8 @@ Sub DrawNotification(screen as Object, gameState as Object)
         alpha = Int(gameState.notificationTimer * 2.0 * 255)
         if alpha < 0 then alpha = 0
         if alpha > 255 then alpha = 255
+        ' If fully transparent, skip drawing to avoid unnecessary work
+        if alpha = 0 then return
     end if
     
     ' Draw semi-transparent background (format: RRGGBBAA)

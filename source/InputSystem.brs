@@ -18,6 +18,7 @@ Function InitInputSystem() as Object
         run: false       ' Star button (10) for run
         pause: false     ' Option (*) button
         back: false      ' Back button
+        playPausePressed: false  ' Play/Pause button (13)
         
         ' Key code constants for reference
         ' Press codes (when button pressed down)
@@ -30,6 +31,7 @@ Function InitInputSystem() as Object
         KEY_REWIND: 8    ' << button
         KEY_FASTFORWARD: 9  ' >> button
         KEY_STAR: 10     ' * button (Options)
+        KEY_PLAY: 13     ' Play/Pause button
         
         ' Release codes (add 100 to press code)
         KEY_LEFT_RELEASE: 104
@@ -39,6 +41,7 @@ Function InitInputSystem() as Object
         KEY_OK_RELEASE: 106
         KEY_BACK_RELEASE: 100
         KEY_STAR_RELEASE: 110
+        KEY_PLAY_RELEASE: 113
         
         ' Methods
         HandleEvent: InputSystem_HandleEvent
@@ -93,6 +96,10 @@ Sub InputSystem_HandleEvent(event as Object)
         m.back = true
     else if keyCode = m.KEY_BACK_RELEASE then
         m.back = false
+    else if keyCode = m.KEY_PLAY then
+        m.playPausePressed = true
+    else if keyCode = m.KEY_PLAY_RELEASE then
+        m.playPausePressed = false
     end if
 End Sub
 
@@ -110,6 +117,7 @@ Sub InputSystem_Reset()
     m.run = false
     m.pause = false
     m.back = false
+    m.playPausePressed = false
 End Sub
 
 
